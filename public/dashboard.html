@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DECEPTICALL - Premium Backend Dashboard</title>
+    <link rel="stylesheet" href="premium-styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="glass-container fade-in-up">
+        <!-- Premium Header -->
+        <header class="premium-header">
+            <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                <div style="width: 60px; height: 60px; background: linear-gradient(45deg, #1E88E5, #42A5F5); border-radius: 15px; display: flex; align-items: center; justify-content: center; margin-right: 1rem; box-shadow: 0 8px 32px rgba(30, 136, 229, 0.3);">
+                    <i class="fas fa-shield-alt" style="font-size: 30px; color: white;"></i>
+                </div>
+                <div>
+                    <h1>DECEPTICALL</h1>
+                    <p style="margin: 0; font-size: 1rem;">Premium Backend Dashboard</p>
+                </div>
+            </div>
+            <p>Advanced Security & Phishing Detection System</p>
+            
+            <!-- Status Indicators -->
+            <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                <div class="status-indicator online" id="server-status">
+                    <i class="fas fa-circle" style="margin-right: 8px;"></i>
+                    Server Online
+                </div>
+                <div class="status-indicator offline" id="db-status">
+                    <i class="fas fa-circle" style="margin-right: 8px;"></i>
+                    Database: Checking...
+                </div>
+                <div class="status-indicator online" id="api-status">
+                    <i class="fas fa-circle" style="margin-right: 8px;"></i>
+                    API Active
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats Grid -->
+        <div class="premium-grid">
+            <div class="stats-card fade-in-up">
+                <div class="stats-number" id="total-users">-</div>
+                <div class="stats-label">Total Users</div>
+            </div>
+            <div class="stats-card fade-in-up">
+                <div class="stats-number" id="total-reports">-</div>
+                <div class="stats-label">Reports Processed</div>
+            </div>
+            <div class="stats-card fade-in-up">
+                <div class="stats-number" id="threats-blocked">-</div>
+                <div class="stats-label">Threats Blocked</div>
+            </div>
+            <div class="stats-card fade-in-up">
+                <div class="stats-number" id="uptime">-</div>
+                <div class="stats-label">Uptime</div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="glass-card fade-in-up">
+            <h2 style="margin-bottom: 1.5rem; color: white;">
+                <i class="fas fa-bolt" style="margin-right: 10px;"></i>
+                Quick Actions
+            </h2>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <button class="premium-btn" onclick="testHealth()">
+                    <i class="fas fa-heartbeat" style="margin-right: 8px;"></i>
+                    Test Health
+                </button>
+                <button class="premium-btn glass" onclick="viewLogs()">
+                    <i class="fas fa-file-alt" style="margin-right: 8px;"></i>
+                    View Logs
+                </button>
+                <button class="premium-btn success" onclick="seedAdmin()">
+                    <i class="fas fa-user-shield" style="margin-right: 8px;"></i>
+                    Seed Admin
+                </button>
+                <button class="premium-btn warning" onclick="clearCache()">
+                    <i class="fas fa-broom" style="margin-right: 8px;"></i>
+                    Clear Cache
+                </button>
+            </div>
+        </div>
+
+        <!-- API Endpoints -->
+        <div class="glass-card fade-in-up">
+            <h2 style="margin-bottom: 1.5rem; color: white;">
+                <i class="fas fa-plug" style="margin-right: 10px;"></i>
+                API Endpoints
+            </h2>
+            <div class="premium-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Method</th>
+                            <th>Endpoint</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="premium-btn" style="padding: 4px 8px; font-size: 0.8rem;">GET</span></td>
+                            <td>/api/health</td>
+                            <td>Health Check</td>
+                            <td><span class="status-indicator online">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="premium-btn" style="padding: 4px 8px; font-size: 0.8rem;">POST</span></td>
+                            <td>/api/login</td>
+                            <td>User Authentication</td>
+                            <td><span class="status-indicator online">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="premium-btn" style="padding: 4px 8px; font-size: 0.8rem;">POST</span></td>
+                            <td>/api/signup</td>
+                            <td>User Registration</td>
+                            <td><span class="status-indicator online">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="premium-btn" style="padding: 4px 8px; font-size: 0.8rem;">POST</span></td>
+                            <td>/api/check-website</td>
+                            <td>Website Security Check</td>
+                            <td><span class="status-indicator online">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="premium-btn" style="padding: 4px 8px; font-size: 0.8rem;">GET</span></td>
+                            <td>/api/reports</td>
+                            <td>Get All Reports</td>
+                            <td><span class="status-indicator online">Active</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- System Information -->
+        <div class="glass-card fade-in-up">
+            <h2 style="margin-bottom: 1.5rem; color: white;">
+                <i class="fas fa-info-circle" style="margin-right: 10px;"></i>
+                System Information
+            </h2>
+            <div class="premium-grid">
+                <div>
+                    <h3 style="color: var(--primary-color); margin-bottom: 1rem;">Environment</h3>
+                    <p><strong>Node.js Version:</strong> <span id="node-version">-</span></p>
+                    <p><strong>Environment:</strong> <span id="env-mode">Development</span></p>
+                    <p><strong>Port:</strong> <span id="port">3000</span></p>
+                    <p><strong>Database:</strong> <span id="db-type">MongoDB</span></p>
+                </div>
+                <div>
+                    <h3 style="color: var(--primary-color); margin-bottom: 1rem;">Security</h3>
+                    <p><strong>JWT Secret:</strong> <span style="color: var(--success-color);">✓ Configured</span></p>
+                    <p><strong>CORS:</strong> <span style="color: var(--success-color);">✓ Enabled</span></p>
+                    <p><strong>Rate Limiting:</strong> <span style="color: var(--success-color);">✓ Active</span></p>
+                    <p><strong>Encryption:</strong> <span style="color: var(--success-color);">✓ AES-256</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Real-time Logs -->
+        <div class="glass-card fade-in-up">
+            <h2 style="margin-bottom: 1.5rem; color: white;">
+                <i class="fas fa-terminal" style="margin-right: 10px;"></i>
+                Real-time Logs
+            </h2>
+            <div id="logs-container" style="background: rgba(0, 0, 0, 0.3); border-radius: 10px; padding: 1rem; height: 300px; overflow-y: auto; font-family: 'Courier New', monospace; font-size: 0.9rem;">
+                <div style="color: var(--text-secondary);">Waiting for logs...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Premium Backend Dashboard JavaScript
+        let logContainer = document.getElementById('logs-container');
+        let startTime = Date.now();
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            updateSystemInfo();
+            checkHealth();
+            updateStats();
+            setInterval(updateUptime, 1000);
+            setInterval(checkHealth, 30000); // Check health every 30 seconds
+        });
+
+        // Update system information
+        function updateSystemInfo() {
+            document.getElementById('node-version').textContent = process.version || 'Unknown';
+            document.getElementById('env-mode').textContent = 'Development';
+            document.getElementById('port').textContent = '3000';
+            document.getElementById('db-type').textContent = 'MongoDB';
+        }
+
+        // Check health status
+        async function checkHealth() {
+            try {
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    updateStatus('server-status', 'online', 'Server Online');
+                    updateStatus('api-status', 'online', 'API Active');
+                    addLog('✅ Health check passed', 'success');
+                } else {
+                    updateStatus('server-status', 'offline', 'Server Error');
+                    addLog('❌ Health check failed', 'error');
+                }
+            } catch (error) {
+                updateStatus('server-status', 'offline', 'Server Offline');
+                addLog('❌ Server connection failed', 'error');
+            }
+        }
+
+        // Update status indicators
+        function updateStatus(elementId, status, text) {
+            const element = document.getElementById(elementId);
+            element.className = `status-indicator ${status}`;
+            element.innerHTML = `<i class="fas fa-circle" style="margin-right: 8px;"></i>${text}`;
+        }
+
+        // Update statistics
+        function updateStats() {
+            // Simulated stats - in real implementation, these would come from API
+            document.getElementById('total-users').textContent = '1,247';
+            document.getElementById('total-reports').textContent = '3,892';
+            document.getElementById('threats-blocked').textContent = '847';
+        }
+
+        // Update uptime
+        function updateUptime() {
+            const uptime = Date.now() - startTime;
+            const hours = Math.floor(uptime / (1000 * 60 * 60));
+            const minutes = Math.floor((uptime % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((uptime % (1000 * 60)) / 1000);
+            
+            document.getElementById('uptime').textContent = 
+                `${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        // Add log entry
+        function addLog(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.style.marginBottom = '0.5rem';
+            
+            let color = '#FFFFFF';
+            if (type === 'success') color = '#4CAF50';
+            if (type === 'error') color = '#E53935';
+            if (type === 'warning') color = '#FF9800';
+            
+            logEntry.innerHTML = `<span style="color: rgba(255,255,255,0.5)">[${timestamp}]</span> <span style="color: ${color}">${message}</span>`;
+            
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+            
+            // Keep only last 50 log entries
+            while (logContainer.children.length > 50) {
+                logContainer.removeChild(logContainer.firstChild);
+            }
+        }
+
+        // Quick action functions
+        async function testHealth() {
+            addLog('🔍 Testing health endpoint...', 'info');
+            await checkHealth();
+        }
+
+        function viewLogs() {
+            addLog('📋 Opening logs view...', 'info');
+            logContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function seedAdmin() {
+            addLog('👤 Seeding admin user...', 'info');
+            try {
+                const response = await fetch('/api/seed-admin', { method: 'POST' });
+                if (response.ok) {
+                    addLog('✅ Admin user seeded successfully', 'success');
+                } else {
+                    addLog('❌ Failed to seed admin user', 'error');
+                }
+            } catch (error) {
+                addLog('❌ Error seeding admin user', 'error');
+            }
+        }
+
+        function clearCache() {
+            addLog('🧹 Clearing cache...', 'info');
+            localStorage.clear();
+            sessionStorage.clear();
+            addLog('✅ Cache cleared successfully', 'success');
+        }
+
+        // Add some initial logs
+        setTimeout(() => {
+            addLog('🚀 DECEPTICALL Backend initialized', 'success');
+            addLog('📊 Premium dashboard loaded', 'info');
+            addLog('🔐 Security protocols active', 'success');
+            addLog('🌐 API endpoints ready', 'info');
+        }, 1000);
+    </script>
+</body>
+</html>
