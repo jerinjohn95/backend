@@ -157,7 +157,7 @@ const login = async (req, res) => {
 const getProfile = async (req, res) => {
   try {
     const user = users.find(u => u._id === req.user.id);
-    
+
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -187,36 +187,53 @@ const getProfile = async (req, res) => {
   }
 };
 
-// @desc    Google OAuth login
-// @route   POST /api/google
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_WEB_CLIENT_ID);
+
+// @desc    Google OAuth login native
+// @route   POST /api/google/verify
 // @access  Public
 const googleAuth = async (req, res) => {
   try {
-    const { token, profile } = req.body;
-    
-    if (!token || !profile) {
+    const { idToken } = req.body;
+
+    if (!idToken) {
       return res.status(400).json({
         success: false,
-        message: 'Google OAuth token and profile are required'
+        message: 'Google idToken is required'
+      });
+    }
+
+    // Verify token with Google
+    const ticket = await client.verifyIdToken({
+      idToken: idToken,
+      audience: process.env.GOOGLE_WEB_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+
+    if (!payload || !payload.email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid token payload'
       });
     }
 
     // Check if user already exists
-    let existingUser = users.find(u => u.email === profile.email);
-    
+    let existingUser = users.find(u => u.email === payload.email);
+
     if (existingUser) {
       // User exists, update their Google info and login
-      existingUser.googleId = profile.googleId;
-      existingUser.profilePicture = profile.profilePicture;
+      existingUser.googleId = payload.sub;
+      existingUser.profilePicture = payload.picture || existingUser.profilePicture;
       existingUser.lastLogin = new Date();
-      
+
       const jwtToken = jwt.sign(
         { id: existingUser._id, role: existingUser.role },
         process.env.JWT_SECRET,
         { expiresIn: '30d' }
       );
 
-      res.status(200).json({
+      return res.status(200).json({
         success: true,
         message: 'Login successful',
         data: {
@@ -235,12 +252,12 @@ const googleAuth = async (req, res) => {
       // Create new user from Google profile
       const newUser = {
         _id: 'google_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-        fullName: profile.name || profile.firstName + ' ' + profile.lastName,
-        email: profile.email,
+        fullName: payload.name || 'Google User',
+        email: payload.email,
         phone: '+0000000000', // Default phone for Google users
         role: 'user',
-        googleId: profile.googleId,
-        profilePicture: profile.profilePicture,
+        googleId: payload.sub,
+        profilePicture: payload.picture,
         createdAt: new Date(),
         updatedAt: new Date(),
         lastLogin: new Date()
@@ -254,7 +271,7 @@ const googleAuth = async (req, res) => {
         { expiresIn: '30d' }
       );
 
-      res.status(200).json({
+      return res.status(200).json({
         success: true,
         message: 'Registration successful',
         data: {
@@ -271,7 +288,7 @@ const googleAuth = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error('Google auth error:', error);
+    console.error('Google token verification error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error during Google authentication',

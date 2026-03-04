@@ -44,14 +44,14 @@ const checkWebsite = async (req, res) => {
       /ow\.ly/i,
       /buff\.ly/i,
       /rebrand\.ly/i,
-      
+
       // Suspicious patterns
       /[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/, // IP addresses
       /[a-z0-9-]+\.tk/i, // .tk domains
       /[a-z0-9-]+\.ml/i, // .ml domains
       /[a-z0-9-]+\.ga/i, // .ga domains
       /[a-z0-9-]+\.cf/i, // .cf domains,
-      
+
       // Typosquatting patterns
       /goggle/i,
       /gooogle/i,
@@ -63,7 +63,7 @@ const checkWebsite = async (req, res) => {
       /amazoon/i,
       /microsft/i,
       /microsooft/i,
-      
+
       // Suspicious subdomains
       /secure-/i,
       /login-/i,
@@ -92,13 +92,13 @@ const checkWebsite = async (req, res) => {
         isFake = true;
         details = 'Non-HTTPS connection detected';
       }
-      
+
       // Check for very long URLs (potential obfuscation)
       if (url.length > 200) {
         isFake = true;
         details = 'Suspiciously long URL detected';
       }
-      
+
       // Check for excessive special characters
       const specialCharCount = (url.match(/[^a-zA-Z0-9.-]/g) || []).length;
       if (specialCharCount > 20) {
