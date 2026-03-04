@@ -15,6 +15,7 @@ const reportRoutes = require('./routes/reportRoutes');
 const gmailRoutes = require('./routes/gmailRoutes');
 const googleAuthRoutes = require('./routes/googleAuthRoutes');
 const fakeCallRoutes = require('./routes/fakeCallRoutes');
+const callProtectionRoutes = require('./routes/callProtectionRoutes');
 
 const app = express();
 
@@ -53,6 +54,7 @@ app.use('/api', userRoutes);
 app.use('/api', reportRoutes);
 app.use('/api', gmailRoutes);
 app.use('/api', fakeCallRoutes);
+app.use('/api/call-protection', callProtectionRoutes);
 app.use('/auth', googleAuthRoutes);
 
 // Premium Dashboard Route
@@ -83,7 +85,8 @@ app.get('/api/health', (req, res) => {
       users: '/api/users',
       reports: '/api/reports',
       gmail: '/api/gmail',
-      website: '/api/check-website'
+      website: '/api/check-website',
+      callProtection: '/api/call-protection/*'
     },
     security: {
       cors: 'enabled',
@@ -744,7 +747,15 @@ app.use('*', (req, res) => {
       'POST /api/signup',
       'GET /api/users',
       'GET /api/reports',
-      'POST /api/check-website'
+      'POST /api/check-website',
+      'POST /api/call-protection/sync',
+      'GET /api/call-protection/call-history',
+      'POST /api/call-protection/block',
+      'POST /api/call-protection/unblock',
+      'GET /api/call-protection/blocked-numbers',
+      'POST /api/call-protection/report-spam',
+      'GET /api/call-protection/statistics',
+      'POST /api/call-protection/analyze'
     ]
   });
 });

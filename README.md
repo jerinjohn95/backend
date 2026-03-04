@@ -1,12 +1,14 @@
 # DECEPTICALL Backend API
 
-A Node.js + Express + MongoDB backend API for the DECEPTICALL mobile application.
+A Node.js + Express + MongoDB backend API for the DECEPTICALL mobile application with comprehensive call protection features.
 
 ## Features
 
 - **Authentication**: JWT-based authentication with role-based access control
 - **User Management**: Admin can view all users and their details
 - **Website Security**: Phishing detection for websites
+- **Call Protection**: Real-time call monitoring, spam detection, and call blocking
+- **Contact Integration**: Device contacts integration for caller ID
 - **Reports**: Track user detection history and statistics
 - **MongoDB Integration**: Scalable database with proper schemas
 
@@ -32,10 +34,28 @@ A Node.js + Express + MongoDB backend API for the DECEPTICALL mobile application
 - `GET /api/user/:id` - Get specific user with reports
 - `PUT /api/user/profile` - Update user profile
 
+### Call Protection
+- `POST /api/call-protection/sync` - Sync call logs from device
+- `GET /api/call-protection/call-history` - Get user's call history
+- `POST /api/call-protection/block` - Block a phone number
+- `POST /api/call-protection/unblock` - Unblock a phone number
+- `GET /api/call-protection/blocked-numbers` - Get blocked numbers
+- `POST /api/call-protection/report-spam` - Report spam call
+- `GET /api/call-protection/statistics` - Get call protection statistics
+- `POST /api/call-protection/analyze` - Analyze phone number
+
 ### Reports
 - `POST /api/check-website` - Check website for phishing
 - `GET /api/reports/:userId` - Get user's reports
 - `GET /api/reports` - Get all reports (Admin only)
+
+### Caller ID & TrueCaller Integration
+- `POST /api/caller-id` - Get caller ID information
+- `POST /api/truecaller-lookup` - TrueCaller API lookup
+- `POST /api/block-number` - Block number (legacy)
+- `POST /api/unblock-number` - Unblock number (legacy)
+- `POST /api/report-spam` - Report spam (legacy)
+- `GET /api/blocked-numbers` - Get blocked numbers (legacy)
 
 ## Setup Instructions
 
@@ -73,6 +93,12 @@ A Node.js + Express + MongoDB backend API for the DECEPTICALL mobile application
    
    # Production mode
    npm start
+   ```
+
+5. **Setup Call Protection (Optional)**
+   ```bash
+   # Setup call protection database and sample data
+   npm run setup:call-protection
    ```
 
 ### MongoDB Setup
