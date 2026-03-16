@@ -1,12 +1,8 @@
 // Import shared user storage from authController
 const { users } = require('./authController');
-const AdvancedWebsiteChecker = require('../services/advancedWebsiteChecker');
 
 // Simple in-memory report storage
 let reports = [];
-
-// Initialize advanced website checker
-const websiteChecker = new AdvancedWebsiteChecker();
 
 // Helper function to create report
 const createReport = (reportData) => {
@@ -20,7 +16,7 @@ const createReport = (reportData) => {
   return newReport;
 };
 
-// @desc    Check website for phishing patterns (Advanced)
+// @desc    Check website for phishing patterns
 // @route   POST /api/check-website
 // @access  Private
 const checkWebsite = async (req, res) => {
@@ -35,15 +31,80 @@ const checkWebsite = async (req, res) => {
       });
     }
 
-    // Use advanced website checker
-    const analysis = await websiteChecker.analyzeWebsite(url);
+    // Basic phishing pattern detection (simplified)
+    const phishingPatterns = [
+      // Common phishing domains
+      /bit\.ly/i,
+      /tinyurl\.com/i,
+      /goo\.gl/i,
+      /t\.co/i,
+      /short\.link/i,
+      /is\.gd/i,
+      /v\.gd/i,
+      /ow\.ly/i,
+      /buff\.ly/i,
+      /rebrand\.ly/i,
 
-    if (!analysis.success) {
-      return res.status(500).json({
-        success: false,
-        message: 'Website analysis failed',
-        error: analysis.error
-      });
+      // Suspicious patterns
+      /[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/, // IP addresses
+      /[a-z0-9-]+\.tk/i, // .tk domains
+      /[a-z0-9-]+\.ml/i, // .ml domains
+      /[a-z0-9-]+\.ga/i, // .ga domains
+      /[a-z0-9-]+\.cf/i, // .cf domains,
+
+      // Typosquatting patterns
+      /goggle/i,
+      /gooogle/i,
+      /facebok/i,
+      /faceboook/i,
+      /twiter/i,
+      /twittter/i,
+      /amazom/i,
+      /amazoon/i,
+      /microsft/i,
+      /microsooft/i,
+
+      // Suspicious subdomains
+      /secure-/i,
+      /login-/i,
+      /account-/i,
+      /verify-/i,
+      /update-/i,
+      /confirm-/i
+    ];
+
+    let isFake = false;
+    let details = '';
+
+    // Check for suspicious patterns
+    for (const pattern of phishingPatterns) {
+      if (pattern.test(url)) {
+        isFake = true;
+        details = 'Suspicious URL pattern detected';
+        break;
+      }
+    }
+
+    // Additional checks
+    if (!isFake) {
+      // Check for HTTPS
+      if (!url.startsWith('https://')) {
+        isFake = true;
+        details = 'Non-HTTPS connection detected';
+      }
+
+      // Check for very long URLs (potential obfuscation)
+      if (url.length > 200) {
+        isFake = true;
+        details = 'Suspiciously long URL detected';
+      }
+
+      // Check for excessive special characters
+      const specialCharCount = (url.match(/[^a-zA-Z0-9.-]/g) || []).length;
+      if (specialCharCount > 20) {
+        isFake = true;
+        details = 'Excessive special characters detected';
+      }
     }
 
     // Create report only if userId exists
@@ -52,16 +113,9 @@ const checkWebsite = async (req, res) => {
       const report = createReport({
         userId,
         type: 'Website',
-        status: analysis.isSuspicious ? 'Fake' : 'Safe',
-        data: analysis.normalizedUrl,
-        details: {
-          riskLevel: analysis.riskLevel,
-          riskScore: analysis.riskScore,
-          riskFactors: analysis.riskFactors,
-          domain: analysis.domain,
-          isHttps: analysis.analysis.isHttps,
-          analysis: analysis.analysis
-        }
+        status: isFake ? 'Fake' : 'Safe',
+        data: url,
+        details: isFake ? details : 'Website appears to be safe'
       });
       reportId = report._id;
     }
@@ -69,16 +123,9 @@ const checkWebsite = async (req, res) => {
     res.status(200).json({
       success: true,
       data: {
-        url: analysis.normalizedUrl,
-        domain: analysis.domain,
-        status: analysis.isSuspicious ? 'Fake' : 'Safe',
-        riskLevel: analysis.riskLevel,
-        riskScore: analysis.riskScore,
-        details: analysis.riskFactors.length > 0 
-          ? analysis.riskFactors.join(', ') 
-          : 'Website appears to be safe',
-        riskFactors: analysis.riskFactors,
-        analysis: analysis.analysis,
+        url,
+        status: isFake ? 'Fake' : 'Safe',
+        details: isFake ? details : 'Website appears to be safe',
         reportId: reportId
       }
     });
