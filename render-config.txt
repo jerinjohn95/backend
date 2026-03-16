@@ -1,0 +1,49 @@
+# Render Deployment Configuration
+# ================================
+
+# Health Check Configuration
+# Render will ping this endpoint to keep the service alive
+HEALTH_CHECK_ENDPOINT=/health
+
+# Server Configuration
+PORT=10000
+NODE_ENV=production
+
+# Database Configuration
+MONGODB_URI=mongodb+srv://decepticall:decepticall123@ac-yeota7q.mongodb.net/decepticall?retryWrites=true&w=majority
+
+# Security Configuration
+JWT_SECRET=your_jwt_secret_key_here_change_in_production
+GOOGLE_CLIENT_ID=your_google_client_id_here
+GOOGLE_CLIENT_SECRET=your_google_client_secret_here
+
+# CORS Configuration
+ALLOWED_ORIGINS=https://backend-0s9d.onrender.com,https://your-frontend-url.com
+
+# Rate Limiting
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=100
+
+# Logging
+LOG_LEVEL=info
+ENABLE_REQUEST_LOGGING=true
+
+# Performance
+COMPRESSION_ENABLED=true
+COMPRESSION_LEVEL=6
+
+# Session Configuration
+SESSION_SECRET=your_session_secret_here_change_in_production
+SESSION_MAX_AGE=86400000
+
+# File Upload Limits
+MAX_FILE_SIZE=10485760
+MAX_FILE_COUNT=10
+
+# Cache Configuration
+ENABLE_CACHE=true
+CACHE_TTL=3600
+
+# Monitoring
+ENABLE_METRICS=true
+METRICS_ENDPOINT=/api/metrics

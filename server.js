@@ -47,6 +47,32 @@ app.use((req, res, next) => {
   next();
 });
 
+// Health check endpoint for Render
+app.get('/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'ok', 
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
+});
+
+// Root endpoint
+app.get('/', (req, res) => {
+  res.status(200).json({ 
+    message: 'DeceptiCall Backend API',
+    status: 'running',
+    version: '1.0.0',
+    endpoints: {
+      health: '/health',
+      auth: '/api/auth',
+      users: '/api/users',
+      reports: '/api/reports',
+      gmail: '/api/gmail',
+      website: '/api/check-website'
+    }
+  });
+});
+
 // Routes
 app.use('/api', authRoutes);
 app.use('/api', userRoutes);
@@ -55,9 +81,18 @@ app.use('/api', gmailRoutes);
 app.use('/api', fakeCallRoutes);
 app.use('/auth', googleAuthRoutes);
 
-// Premium Dashboard Route
+// Premium Dashboard Route (serves HTML dashboard)
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+});
+
+// Health check endpoint for Render
+app.get('/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'ok', 
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
 });
 
 // Enhanced Health Check Endpoint
